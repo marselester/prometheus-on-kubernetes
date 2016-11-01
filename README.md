@@ -46,3 +46,14 @@ $ cd $GOPATH/src/github.com/marselester/prometheus-on-kubernetes/hello-app
 $ glide install
 $ make build
 ```
+
+## Kubernetes manifests
+
+Kubernetes manifests have excessive names, e.g., `name: prometheus-deployment`
+instead of just `name: prometheus`. That is done for demonstration purpose.
+
+- [prometheus][kube-prometheus]
+- [hello app][kube-hello]
+
+[kube-prometheus]: ./kube/prometheus
+[kube-hello]: ./kube/hello
