@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	addr := flag.String("http", "localhost:8000", "HTTP server address")
+	addr := flag.String("http", "0.0.0.0:8000", "HTTP server address")
 	flag.Parse()
 
 	go func() {
