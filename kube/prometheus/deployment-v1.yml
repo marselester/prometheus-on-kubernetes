@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-deployment
+spec:
+  replicas: 1 # tells deployment to run 1 pod matching the template below
+  template: # crete pods using pod definition in this template
+    metadata:
+      labels: # these key value pairs will be attached to pods
+        app: prometheus-server
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v1.2.1
+          ports:
+            - containerPort: 9090 # port we open in the container

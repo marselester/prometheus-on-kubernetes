@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus-server
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v1.2.1
+          # Arguments for /bin/prometheus
+          args:
+            - "-config.file=/etc/prometheus/conf/prometheus.yml"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/conf/ # prometheus.yml is mounted here from ConfigMap.
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            name: prometheus-server-conf # the name we used in $ kubectl create configmap
