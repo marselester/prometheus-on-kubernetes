@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'hello'
+    kubernetes_sd_configs:
+      - api_servers:
+        - 'https://kubernetes.default.svc'
+        in_cluster: true
+        role: pod
+    # Prometheus adds a pod name, so metrics look like
+    # 'hello_requests_total{instance="10.16.0.9:8000",job="hello",k8s_pod="hello-deployment-1471727270-cbbqh",status="500"} 1'.
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: hello-server
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: k8s_pod
+        action: replace

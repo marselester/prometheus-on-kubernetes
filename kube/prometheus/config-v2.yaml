@@ -1,0 +1,26 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'hello'
+    # The information to access the Kubernetes API to discover targets.
+    kubernetes_sd_configs:
+      - api_servers:
+        - 'https://kubernetes.default.svc'
+        # Prometheus assumes it is being run inside a Kubernetes pod.
+        in_cluster: true
+        # Only pods should be discovered.
+        role: pod
+    # Prometheus collects metrics from pods with "app: hello-server" label.
+    # Prometheus gets 'hello_requests_total{status="500"} 1'
+    # from hello:8000/metrics and adds "job" and "instance" labels, so it becomes
+    # 'hello_requests_total{instance="10.16.0.10:8000",job="hello",status="500"} 1'.
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: hello-server
+        action: keep
